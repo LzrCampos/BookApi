@@ -31,7 +31,8 @@ namespace BookAPI.Services.Book
                 var book = new BookModel
                 {
                     Title = bookCreateDto.Title,
-                    Author = author
+                    Author = author,
+                    Image = bookCreateDto.Image
                 };
 
                 _context.Books.Add(book);
@@ -116,7 +117,7 @@ namespace BookAPI.Services.Book
             ResponseModel<BookModel> response = new ResponseModel<BookModel>();
             try
             {
-                var book = await _context.Books.FirstOrDefaultAsync(a => a.Id == bookId);
+                var book = await _context.Books.Include(a => a.Author).FirstOrDefaultAsync(b => b.Id == bookId);
                 if (book == null)
                 {
                     response.Message = "Book not found.";
